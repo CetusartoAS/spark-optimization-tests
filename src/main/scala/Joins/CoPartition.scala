@@ -17,6 +17,7 @@ object CoPartition {
   /*
     addColumns(initialTable, 3) => dataframe with columns "id", "newCol1", "newCol2", "newCol3"
     Simulated operation on a joined dataframe
+
    */
   def addColumns[T](df: Dataset[T], n: Int): DataFrame = {
     val newColumns = (1 to n).map(i => s"id * $i as newCol$i")
