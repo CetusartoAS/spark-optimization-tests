@@ -33,19 +33,11 @@ object RDDBroadcastJoins {
   // the competition has ended - the leaderboard is known
   val leaderboard = sc.parallelize(1 to 10000000).map((_, random.alphanumeric.take(8).mkString))
   val medalists = leaderboard.join(prizes)
-  medalists.foreach(println) // 38s for 10M elements!
+  medalists.foreach(println)
 
-  /*
-    We know from SQL joins that the small RDD can be broadcast so that we can avoid the shuffle on the big RDD.
-    However, for the RDD API, we'll have to do this manually.
-    This lesson is more about how to actually implement the broadcasting technique on RDDs.
-  */
-
-  // need to collect the RDD locally, so that we can broadcast to the executors
   val medalsMap = prizes.collectAsMap()
-  // after we do this, all executors can refer to the medalsMap locally
   sc.broadcast(medalsMap)
-  // need to avoid shuffles by manually going through the partitions of the big RDD
+
   val improvedMedalists = leaderboard.mapPartitions { iterator => // iterator of all the tuples in this partition; all the tuples are local to this executor
     iterator.flatMap { record =>
       val (index, name) = record
