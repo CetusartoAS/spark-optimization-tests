@@ -8,7 +8,7 @@ object BroadcastJoins {
 
   val spark = SparkSession.builder()
     .appName("Broadcast Joins")
-    .master("local")
+    .master("local[*]")
     .getOrCreate()
   // Deactivate auto broadcast for explanation
   spark.conf.set("spark.sql.autoBroadcastJoinThreshold", -1)
@@ -40,15 +40,17 @@ object BroadcastJoins {
 
   // Brute force join
   val joined = table.join(lookupTable, "id")
-  //joined.show()
 
   // Optimized join
   val joinedSmart = table.join(broadcast(lookupTable), "id")
-  joinedSmart.show()
 
   // deactivate auto-broadcast
 
   def main(args: Array[String]): Unit = {
+    //Recommended to test one at a time
+//    joined.show()
+    joinedSmart.show()
+
     Thread.sleep(1000000)
   }
 }
