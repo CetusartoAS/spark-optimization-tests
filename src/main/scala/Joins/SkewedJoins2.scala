@@ -3,9 +3,8 @@ package Joins
 import generator.DataGenerator
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
-import org.apache.spark.sql.types.IntegerType
 
-object SkewedJoins {
+object SkewedJoins2 {
 
   val spark = SparkSession.builder()
     .appName("Skewed Joins")
@@ -36,12 +35,25 @@ object SkewedJoins {
     .agg(avg("salePrice").as("averagePrice"))
 
   def main(args: Array[String]): Unit = {
+    //show skewness
+
+    laptops.groupBy("make", "model").agg(count("*").as("count")).orderBy(col("count").desc).show()
+    println("Laptops" + "\n\n\n\n\n\n\n\n\n")
+
+    laptopOffers.groupBy("make", "model").agg(count("*").as("count")).orderBy(col("count").desc).show()
+    println("Laptops Offers" + "\n\n\n\n\n\n\n\n\n")
 
 
+    laptops2.groupBy("make", "model", "salt").agg(count("*").as("count")).orderBy(col("count").desc).show()
+    println("Laptops 2" + "\n\n\n\n\n\n\n\n\n")
 
-    joined.show()
-    joined2.show()
+    laptopOffers2.groupBy("make", "model", "salt").agg(count("*").as("count")).orderBy(col("count").desc).show()
+    println("Laptops Offers 2" + "\n\n\n\n\n\n\n\n\n")
 
-    Thread.sleep(1000000000)
+
+    //    joined.show()
+    //    joined2.show()
+    spark.stop()
+    Thread.sleep(10000)
   }
 }

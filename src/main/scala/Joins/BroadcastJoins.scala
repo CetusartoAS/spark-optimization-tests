@@ -48,8 +48,8 @@ object BroadcastJoins {
 
   def main(args: Array[String]): Unit = {
     //Recommended to test one at a time
-//    joined.show()
-    joinedSmart.show()
+    joined.show()
+//    joinedSmart.show()
 
     Thread.sleep(1000000)
   }
